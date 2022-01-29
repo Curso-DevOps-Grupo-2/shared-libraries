@@ -1,8 +1,6 @@
 import utilities.*
 
 def call(stages){
-    echo 'Pulling BRANCH_NAME...' + env.BRANCH_NAME
-    echo 'Pulling GIT_BRANCH... ' + env.GIT_BRANCH
     def stagesList = stages.split(';')
     def listStagesOrder = [
         'compile': 'compile',
@@ -60,7 +58,7 @@ def sonar(){
     stage("$env.STAGE "){
         withSonarQubeEnv('sonarqube') {
             sh "echo 'Calling sonar'"
-            sh 'mvn sonar:sonar -Dsonar.projectKey=test'
+            sh "mvn sonar:sonar -Dsonar.projectName=ms-iclab-'${GIT_BRANCH}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
         }
     }
 }
