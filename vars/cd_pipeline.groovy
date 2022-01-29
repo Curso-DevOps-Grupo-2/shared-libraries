@@ -33,15 +33,15 @@ def gitDiff(){
     env.STAGE = "Stage 1: git diff"
     stage("$env.STAGE"){
         sh "echo 'git diff'"
-        sh "git diff '${GIT_BRANCH}'...main"
+        sh "git diff '${GIT_BRANCH}'...origin/main"
     }
 }
 def nexusDownload(){
     env.STAGE = "Stage 2: nexus download"
     stage("$env.STAGE"){
         sh "echo 'download from nexus'"
-        sh "export PVERSION=`mvn help:evaluate -Dexpression=project.version | grep -e '^[^\[]'`"
-        sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASS 'http://localhost:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/'{$PVERSION}'/DevOpsUsach2020-'{$PVERSION}'.jar' -O"
+        sh "export PVERSION=`mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'`"
+        sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD 'http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/'{$PVERSION}'/DevOpsUsach2020-'{$PVERSION}'.jar' -O"
     }
 }
 def run(){
