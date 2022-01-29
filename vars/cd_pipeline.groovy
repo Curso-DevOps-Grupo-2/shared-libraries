@@ -3,7 +3,7 @@ import utilities.*
 def call(stages){
     def stagesList = stages.split(';')
     def listStagesOrder = [
-        'gitDiff': 'gitDiff',
+        // 'gitDiff': 'gitDiff',
         'nexusDownload': 'nexusDownload',
         'runJar': 'runJar'
     ]
@@ -25,17 +25,16 @@ def call(stages){
 
 }
 def allStages(){
-    gitDiff()
     nexusDownload()
     runJar()
 }
-def gitDiff(){
-    env.STAGE = "Stage 1: git diff"
-    stage("$env.STAGE"){
-        sh "echo 'git diff'"
-        sh "git diff '${GIT_BRANCH}'...main"
-    }
-}
+// def gitDiff(){
+//     env.STAGE = "Stage 1: git diff"
+//     stage("$env.STAGE"){
+//         sh "echo 'git diff'"
+//         sh "git diff '${GIT_BRANCH}'...main"
+//     }
+// }
 def nexusDownload(){
     env.STAGE = "Stage 2: nexus download"
     stage("$env.STAGE"){
