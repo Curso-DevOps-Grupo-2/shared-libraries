@@ -7,7 +7,7 @@ def call(){
         NEXUS_PASSWORD     = credentials('nexus-pass')
     }
      parameters {
-            choice  name: 'compileTool', choices: ['ci', 'cd'], description: 'Seleccione el tipo de Pipeline'
+            choice  name: 'pipelineType', choices: ['ci', 'cd'], description: 'Seleccione el tipo de Pipeline'
             string  name: 'stages', description: 'Ingrese los stages para ejecutar', trim: true
         }
         stages {
