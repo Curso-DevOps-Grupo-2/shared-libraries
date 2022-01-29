@@ -45,7 +45,7 @@ def nexusDownload(){
         )
         
         sh "echo '${version}'"
-        sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD 'http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/$PVERSION/DevOpsUsach2020-$PVERSION.jar' -O"
+        sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD 'http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/${version}/DevOpsUsach2020-${version}.jar' -O"
     }
 }
 def runJar(){
