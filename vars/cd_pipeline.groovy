@@ -50,16 +50,15 @@ def nexusDownload(){
 def runJar(){
     env.STAGE = "Stage 3: run project"
     stage("$env.STAGE"){
-        steps {
-            sh "echo '${version}'"
-            def version = sh (
-                script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
-            ).trim()
-            sh "echo '${version}'"
-            sh "java -jar DevOpsUsach2020-${version}.jar &"
-            sh "sleep 20"
-            sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
-        }
+        
+        sh "echo '${version}'"
+        def version = sh (
+            script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+        ).trim()
+        sh "echo '${version}'"
+        sh "java -jar DevOpsUsach2020-${version}.jar &"
+        sh "sleep 20"
+        sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
     }
 }
 // def mergeMaster(){
