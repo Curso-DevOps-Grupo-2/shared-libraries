@@ -5,10 +5,7 @@ def call(stages){
     def listStagesOrder = [
         'gitDiff': 'gitDiff',
         'nexusDownload': 'nexusDownload',
-        'run': 'run',
-        'mergeMaster': 'mergeMaster',
-        'mergeDevelop': 'mergeDevelop',
-        'tagMaster': 'tagMaster'
+        'run': 'run'
     ]
 
     def arrayUtils = new array.arrayExtentions();
