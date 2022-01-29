@@ -5,7 +5,7 @@ def call(stages){
     def listStagesOrder = [
         'gitDiff': 'gitDiff',
         'nexusDownload': 'nexusDownload',
-        'run': 'run'
+        'runJar': 'runJar'
     ]
 
     def arrayUtils = new array.arrayExtentions();
@@ -27,7 +27,7 @@ def call(stages){
 def allStages(){
     gitDiff()
     nexusDownload()
-    run()
+    runJar()
 }
 def gitDiff(){
     env.STAGE = "Stage 1: git diff"
@@ -44,7 +44,7 @@ def nexusDownload(){
         sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASS 'http://localhost:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/'{$PVERSION}'/DevOpsUsach2020-'{$PVERSION}'.jar' -O"
     }
 }
-def run(){
+def runJar(){
     env.STAGE = "Stage 3: run project"
     stage("$env.STAGE"){
         steps {
