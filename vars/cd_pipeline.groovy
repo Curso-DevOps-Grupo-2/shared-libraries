@@ -44,7 +44,7 @@ def nexusDownload(){
             script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
         ).trim()
         def URL = "http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/$version/DevOpsUsach2020-${version}.jar"
-        sh "chmod -R 777 ../taller-n3"
+        sh "chmod -R 777 ../taller-m3"
         sh "echo '${version}'"
         sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD $URL -O"
     }
