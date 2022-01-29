@@ -43,7 +43,6 @@ def nexusDownload(){
         def version = sh (
             script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
         )
-        
         sh "echo '${version}'"
         sh 'curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD "http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/${version}/DevOpsUsach2020-${version}.jar" -O'
     }
@@ -52,7 +51,7 @@ def runJar(){
     env.STAGE = "Stage 3: run project"
     stage("$env.STAGE"){
         steps {
-            sh "java -jar DevOpsUsach2020-'{$PVERSION}'.jar &"
+            sh 'java -jar DevOpsUsach2020-${version}.jar &'
             sh "sleep 20"
             sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
         }
