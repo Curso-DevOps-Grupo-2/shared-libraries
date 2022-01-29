@@ -1,6 +1,8 @@
 import utilities.*
 
 def call(stages){
+    echo 'Pulling BRANCH_NAME...' + env.BRANCH_NAME
+    echo 'Pulling GIT_BRANCH... ' + env.GIT_BRANCH
     def stagesList = stages.split(';')
     def listStagesOrder = [
         'compile': 'compile',
