@@ -7,29 +7,24 @@ def call(){
         NEXUS_PASSWORD     = credentials('nexus-pass')
     }
      parameters {
-            choice  name: 'compileTool', choices: ['Gradle', 'Maven'], description: 'Seleccione el empaquetador maven/gradle'
+            choice  name: 'compileTool', choices: ['ci', 'cd'], description: 'Seleccione el tipo de Pipeline'
             string  name: 'stages', description: 'Ingrese los stages para ejecutar', trim: true
         }
         stages {
             stage("Pipeline"){
                 steps {
-                    script{
-                        // params.compileTool
+                    script{                        
                         sh "env"
                         env.STAGE  = ""
                         switch(params.compileTool)
                         {
-                            case 'Maven':
-                                figlet  "Maven"
-                                // def ejecucion = load 'maven.groovy'
-                                // ejecucion.call()
-                                maven.call(params.stages)
+                            case 'ci':
+                                figlet  "C. INTEGRATION"                                
+                                cd-pipeline.call(params.stages)
                             break;
-                            case 'Gradle':
-                                figlet  "Gradle"
-                                // def ejecucion = load 'gradle.groovy'
-                                // ejecucion.call()
-                                gradle.call(params.stages)
+                            case 'cd':
+                                figlet  "C. DELIVERY"                                
+                                ci-pipeline.call(params.stages)
                             break;
                         }
                     }

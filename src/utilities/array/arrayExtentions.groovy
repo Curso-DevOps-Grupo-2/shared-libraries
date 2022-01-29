@@ -6,8 +6,7 @@ def searchKeyInArray(String keyWordsAsString, String splitIdentifier, Map arrayM
         def _key = it?.trim()
         if(!_key.equals("") && ( arrayMapToCompare.containsKey(it) )){
             _array.add(arrayMapToCompare[it])
-        }else{
-            //it could be 'error'
+        }else{            
             println("***************************************************************")
             figlet  " ${it} "
             println "No se encontró como una función válida, las opociones son:${arrayMapToCompare.keySet() as List}"
