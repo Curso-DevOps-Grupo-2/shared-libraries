@@ -31,9 +31,6 @@ def allStages(){
     gitDiff()
     nexusDownload()
     run()
-    mergeMaster()
-    mergeDevelop()
-    tagMaster()
 }
 def gitDiff(){
     env.STAGE = "Stage 1: git diff"
