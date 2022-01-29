@@ -63,7 +63,7 @@ def sonar(){
     }
 }
 def nexusUpload(){
-    env.STAGE = "Stage 4: Sonarqube analysis"
+    env.STAGE = "Stage 5: Nexus Upload"
     stage("$env.STAGE "){
         nexusPublisher nexusInstanceId: 'nexus',
         nexusRepositoryId: 'devops-usach-nexus',
