@@ -42,7 +42,7 @@ def nexusDownload(){
         sh "echo 'download from nexus'"
         def version = sh (
             script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
-        )
+        ).trim()
         def URL = "http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/$version/DevOpsUsach2020-${version}.jar"
         
         sh "echo '${URL.trim()}'"
