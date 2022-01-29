@@ -20,11 +20,11 @@ def call(){
                         {
                             case 'ci':
                                 figlet  "C. INTEGRATION"                                
-                                cd-pipeline.call(params.stages)
+                                ci_pipeline.call(params.stages)
                             break;
                             case 'cd':
                                 figlet  "C. DELIVERY"                                
-                                ci-pipeline.call(params.stages)
+                                cd_pipeline.call(params.stages)
                             break;
                         }
                     }
