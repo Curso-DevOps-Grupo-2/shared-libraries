@@ -16,7 +16,7 @@ def call(){
                     script{                        
                         sh "env"
                         env.STAGE  = ""
-                        switch(params.compileTool)
+                        switch(params.pipelineType)
                         {
                             case 'ci':
                                 figlet  "C. INTEGRATION"                                
