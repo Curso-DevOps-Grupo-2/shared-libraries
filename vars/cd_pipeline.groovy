@@ -51,7 +51,6 @@ def runJar(){
     env.STAGE = "Stage 3: run project"
     stage("$env.STAGE"){
         
-        sh "echo '${version}'"
         def version = sh (
             script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
         ).trim()
