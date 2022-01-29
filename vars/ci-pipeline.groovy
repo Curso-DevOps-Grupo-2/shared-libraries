@@ -1,45 +1,14 @@
-/*
-	forma de invocación de método call:
-	def ejecucion = load 'script.groovy'
-	ejecucion.call()
-*/
-
 import utilities.*
 
 def call(stages){
-    // def stagesList = stages.split(';')
-    // sh "echo ${stagesList}"
-    //Escribir directamente el código del stage, sin agregarle otra clausula de Jenkins.
-    // sBuild()
-    // sSonar()
-    // sCurlSpring()
-    // sUNexus()
-    // sDNexus()
-    // sTestJar()
-    // sCurlJar()
-
+    def stagesList = stages.split(';')
     def listStagesOrder = [
-        'build': 'sBuild',
-        'sonar': 'sSonar',
-        'run_spring_curl': 'sCurlSpring',
-        'upload_nexus': 'sUNexus',
-        'download_nexus': 'sDNexus',
-        'run_jar': 'sTestJar',
-        'curl_jar': 'sCurlJar'
+        'compile': 'compile',
+        'test': 'test',
+        'packageJar': 'packageJar',
+        'sonar': 'sonar',
+        'nexusUpload': 'nexusUpload',
     ]
-
-    // stagesList.each{
-    //     if(it == "build"){
-    //         sBuild()
-    //     }else{
-    //         if(it == "sonar"){
-    //             sSonar()
-    //         }else{
-    //             sh "echo 'Caso else'"
-    //         }
-
-    //     }
-    // }
 
     def arrayUtils = new array.arrayExtentions();
     def stagesArray = []
@@ -58,81 +27,64 @@ def call(stages){
 
 }
 def allStages(){
-    sBuild()
-    sSonar()
-    sCurlSpring()
-    sUNexus()
-    sDNexus()
-    sTestJar()
-    sCurlJar()
+    compile()
+    test()
+    packageJar()
+    sonar()
+    nexusUpload()
 }
-def sBuild(){
-    env.STAGE = "Paso 1: Build  Test"
+def compile(){
+    env.STAGE = "Stage 1: Compile"
     stage("$env.STAGE "){
-        sh "echo 'Build  Test!'"
-        sh "gradle clean build"
-        // code
+        sh "echo 'compile'"
+        sh "mvn compile"
     }
 }
-def sSonar(){
-    env.STAGE = "Paso 2: Sonar - Análisis Estático"
+def test(){
+    env.STAGE = "Stage 2: unit tests"
     stage("$env.STAGE "){
-        sh "echo 'Análisis Estático!'"
-        withSonarQubeEnv('sonarqube3') {
-            sh "echo 'Calling sonar by ID!'"
-            // Run Maven on a Unix agent to execute Sonar.
-            sh './gradlew sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
+        sh "echo 'tests'"
+        sh "mvn test"
+    }
+}
+def packageJar(){
+    env.STAGE = "Stage 3: Package"
+    stage("$env.STAGE "){
+        sh "mvn package"
+    }
+}
+def sonar(){
+    env.STAGE = "Stage 4: Sonarqube analysis"
+    stage("$env.STAGE "){
+        withSonarQubeEnv('sonarqube') {
+            sh "echo 'Calling sonar'"
+            sh 'mvn sonar:sonar -Dsonar.projectKey=test'
         }
     }
 }
-def sCurlSpring(){
-    env.STAGE = "Paso 3: Curl Springboot Gradle sleep 20"
-    stage("$env.STAGE "){
-        sh "gradle bootRun&"
-        sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
-    }
-}
-def sUNexus(){
-    env.STAGE = "Paso 4: Subir Nexus"
-    stage("$env.STAGE "){
-        nexusPublisher nexusInstanceId: 'nexus3',
-        nexusRepositoryId: 'devops-usach-nexus',
-        packages: [
-            [$class: 'MavenPackage',
-                mavenAssetList: [
-                    [classifier: '',
-                    extension: '.jar',
-                    filePath: 'build/libs/DevOpsUsach2020-0.0.1.jar'
-                ]
-            ],
-                mavenCoordinate: [
-                    artifactId: 'DevOpsUsach2020',
-                    groupId: 'com.devopsusach2020',
-                    packaging: 'jar',
-                    version: '0.0.1'
+def nexusUpload(){
+     stage("Stage 5: Nexus upload"){
+        stage("$env.STAGE "){
+            nexusPublisher nexusInstanceId: 'nexus',
+            nexusRepositoryId: 'devops-usach-nexus',
+            packages: [
+                [$class: 'MavenPackage',
+                    mavenAssetList: [
+                        [
+                            classifier: '',
+                            extension: '',
+                            filePath: 'build/DevOpsUsach2020-0.0.1.jar'
+                        ]
+                    ],
+                    mavenCoordinate: [
+                        artifactId: 'DevOpsUsach2020',
+                        groupId: 'com.devopsusach2020',
+                        packaging: 'jar',
+                        version: '0.0.1'
+                    ]
                 ]
             ]
-        ]
-    }
-}
-def sDNexus(){
-     stage("Paso 5: Descargar Nexus"){
-        env.STAGE = env.STAGE_NAME
-        sh 'curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD "http://nexus3:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1/DevOpsUsach2020-0.0.1.jar" -O'
-    }
-
-}
-
-def sTestJar(){
-    stage("Paso 6: Levantar Artefacto Jar"){
-        env.STAGE = env.STAGE_NAME
-        sh 'nohup bash java -jar DevOpsUsach2020-0.0.1.jar & >/dev/null'
-    }
-}
-def sCurlJar(){
-    stage("Paso 7: Testear Artefacto - Dormir(Esperar 20sg) "){
-        env.STAGE = env.STAGE_NAME
-        sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+        }
     }
 }
 
