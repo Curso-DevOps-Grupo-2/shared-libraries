@@ -40,7 +40,8 @@ def nexusDownload(){
     env.STAGE = "Stage 2: nexus download"
     stage("$env.STAGE"){
         sh "echo 'download from nexus'"
-        def PVERSION = sh "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'"
+        echo "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'"
+        def PVERSION = sh ("mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'")
         sh "echo $PVERSION"
         def url = "http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/${PVERSION}/DevOpsUsach2020-${PVERSION}.jar"
         sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD $url -O"
