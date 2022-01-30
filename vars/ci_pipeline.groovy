@@ -63,7 +63,7 @@ def sonar(){
             def repoName = repoUrl.split('/')
 
             def branchUrl = env.GIT_BRANCH
-            def branchName= repoUrl.split('/')
+            def branchName= branchUrl.split('/')
                         
         
 
