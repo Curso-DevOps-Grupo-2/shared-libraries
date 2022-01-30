@@ -42,8 +42,13 @@ def prueba(){
         def key = repoUrl.split('/')
                 
         echo "The projectKey is: ${key}"        
-        def scope  ='major'
-        def latestVersion = '1.0.0'
+        def scope  ='minor'
+
+        def version = sh (
+            script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+        ).trim()
+
+        def latestVersion = version
         def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
         def nextVersion
         switch (scope) {
