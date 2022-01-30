@@ -5,7 +5,8 @@ def call(stages){
     def listStagesOrder = [
         // 'gitDiff': 'gitDiff',
         'nexusDownload': 'nexusDownload',
-        'runJar': 'runJar'
+        'runJar': 'runJar',
+        'prueba' : 'prueba'
     ]
 
     def arrayUtils = new array.arrayExtentions();
@@ -25,8 +26,9 @@ def call(stages){
 
 }
 def allStages(){
-    nexusDownload()
-    runJar()
+    // nexusDownload()
+    // runJar()
+    prueba()
 }
 // def gitDiff(){
 //     env.STAGE = "Stage 1: git diff"
@@ -35,6 +37,33 @@ def allStages(){
 //         sh "git diff '${GIT_BRANCH}'...main"
 //     }
 // }
+
+def prueba(){
+ env.STAGE = "Stage prueba: prueba"
+    stage("$env.STAGE"){
+
+         def script_output = 
+        sh(returnStdout: true, script: "echo hola")
+        script_output = script_output.trim()
+        VAR_NAME1 = script_output
+        println "VAR_NAME1 is ${VAR_NAME1}"
+
+
+        def script_output = sh(returnStdout: true, script: """
+         #!/bin/bash
+        set -e
+        set +x
+        VAR_NAME=10
+        echo \$VAR_NAME
+            """)
+            script_output = script_output.trim()
+            VAR_NAME = script_output
+            echo "VAR_NAME is ${VAR_NAME}"        
+    }
+
+}
+
+
 def nexusDownload(){
     env.STAGE = "Stage 2: nexus download"
     stage("$env.STAGE"){
