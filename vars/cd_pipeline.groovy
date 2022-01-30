@@ -25,10 +25,28 @@ def call(stages){
 
 }
 def allStages(){
-    gitDiff()
-    nexusDownload()
-    runJar()
+     prueba()
+    // gitDiff()
+    // nexusDownload()
+    // runJar()
 }
+def prueba(){
+    env.STAGE = "prueba"
+    stage("$env.STAGE"){
+        sh "echo '${GIT_BRANCH}'"
+        sh "echo '${GIT_URL}'"
+
+
+        def repoUrl = checkout(scm).GIT_URL
+        def key = repoUrl.tokenize('/')[3]
+        def slug = repoUrl.tokenize('/')[4]
+        slug = slug.substring(0, slug.lastIndexOf('.')) //Remove .git
+        echo "The projectKey is: ${key}"
+        echo "The repositorySlug is: ${slug}" 
+        
+    }
+}
+
 def gitDiff(){
     env.STAGE = "Stage 1: git diff"
     stage("$env.STAGE"){
