@@ -49,15 +49,15 @@ def prueba(){
         println "VAR_NAME1 is ${VAR_NAME1}"
 
 
-        def script_output = sh(returnStdout: true, script: """
+        def output = sh(returnStdout: true, script: """
          #!/bin/bash
         set -e
         set +x
         VAR_NAME=10
         echo \$VAR_NAME
             """)
-            script_output = script_output.trim()
-            VAR_NAME = script_output
+            output = output.trim()
+            VAR_NAME = output
             echo "VAR_NAME is ${VAR_NAME}"        
     }
 
