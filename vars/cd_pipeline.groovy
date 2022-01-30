@@ -33,6 +33,7 @@ def allStages(){
 def prueba(){
     env.STAGE = "prueba"
     stage("$env.STAGE"){
+
         sh "echo '${GIT_BRANCH}'"
         sh "echo '${GIT_URL}'"
 
@@ -41,6 +42,23 @@ def prueba(){
         def key = repoUrl.split('/')
                 
         echo "The projectKey is: ${key}"        
+        def scope  ='major'
+        def latestVersion = '1.0.0'
+        def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
+        def nextVersion
+        switch (scope) {
+            case 'major':
+                nextVersion = "${major + 1}.0.0"
+                break
+            case 'minor':
+                nextVersion = "${major}.${minor + 1}.0"
+                break
+            case 'patch':
+                nextVersion = "${major}.${minor}.${patch + 1}"
+                break
+        }
+        echo "The nextVersion is: ${nextVersion}"    
+
         
     }
 }
