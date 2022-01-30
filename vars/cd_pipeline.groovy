@@ -40,7 +40,7 @@ def prueba(){
         def repoUrl = env.GIT_URL
         def key = repoUrl.split('/')
                 
-        echo "The projectKey is: ${key}"        
+        echo "The projectKey is: ${key[3]}"        
         
     }
 }
