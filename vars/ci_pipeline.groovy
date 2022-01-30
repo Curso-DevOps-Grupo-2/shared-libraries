@@ -60,9 +60,14 @@ def sonar(){
             sh "echo 'Calling sonar'"
 
             def repoUrl = env.GIT_URL
-            def repoName = repoUrl.split('/')                                        
+            def repoName = repoUrl.split('/')
 
-            sh "mvn sonar:sonar -Dsonar.projectName='${repoName[4]}'-'${GIT_BRANCH}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
+            def branchUrl = env.GIT_BRANCH
+            def branchName= repoUrl.split('/')
+                        
+        
+
+            sh "mvn sonar:sonar -Dsonar.projectName='${repoName[4]}'-'${branchName[2]}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
         }
     }
 }
