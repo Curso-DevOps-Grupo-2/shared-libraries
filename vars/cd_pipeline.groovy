@@ -33,7 +33,7 @@ def gitDiff(){
     env.STAGE = "Stage 1: git diff"
     stage("$env.STAGE"){
         sh "echo 'git diff'"
-        sh "git diff '${GIT_BRANCH}'...origin/main"
+        sh "git diff main...'${GIT_BRANCH}'"
     }
 }
 def nexusDownload(){
