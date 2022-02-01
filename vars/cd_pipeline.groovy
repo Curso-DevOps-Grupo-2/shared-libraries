@@ -60,9 +60,9 @@ def prueba(){
 
         //************ Vsalidar si existe archivos para ejecucion Gradle*************************************
 
-        def exists_gradlew = fileExists 'gradlew' 
+        def exists_maven = fileExists 'pom.xml' 
         
-        if (exists_gradlew) { echo 'Yes' } else { echo 'No' }
+        if (exists_maven) { echo 'App Maven' } else { echo 'No es una App Maven' }
         
         
 
