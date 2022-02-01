@@ -7,7 +7,6 @@ def call(){
         NEXUS_PASSWORD     = credentials('nexus-pass')
     }
      parameters {
-            choice  name: 'pipelineType', choices: ['ci', 'cd'], description: 'Seleccione el tipo de Pipeline'
             string  name: 'stages', description: 'Ingrese los stages para ejecutar', trim: true
         }
         stages {
@@ -15,17 +14,13 @@ def call(){
                 steps {
                     script{                        
                         sh "env"
-                        env.STAGE  = ""
-                        switch(params.pipelineType)
-                        {
-                            case 'ci':
-                                figlet  "C. INTEGRATION"                                
-                                ci_pipeline.call(params.stages)
-                            break;
-                            case 'cd':
-                                figlet  "C. DELIVERY"                                
-                                cd_pipeline.call(params.stages)
-                            break;
+                        if (env.GIT_BRANCH.startsWith("feature")) {
+                            figlet  "C. INTEGRATION"
+                            // ci_pipeline.call(params.stages)
+                        }
+                        if (env.GIT_BRANCH.startsWith("release")) {
+                            figlet  "C. DELIVERY"
+                            // cd_pipeline.call(params.stages)
                         }
                     }
                 }
