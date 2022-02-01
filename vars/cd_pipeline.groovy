@@ -64,6 +64,11 @@ def prueba(){
         }
         echo "The nextVersion is: ${nextVersion}"    
 
+
+        def exists_gradlew = fileExists 'gradlew' if (exists) { echo 'Yes' } else { echo 'No' }
+        
+        
+
         
     }
 }
