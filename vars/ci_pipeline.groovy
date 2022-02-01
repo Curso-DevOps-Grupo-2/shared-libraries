@@ -58,7 +58,14 @@ def sonar(){
     stage("$env.STAGE "){
         withSonarQubeEnv('sonarqube') {
             sh "echo 'Calling sonar'"
-            sh "mvn sonar:sonar -Dsonar.projectName=ms-iclab-'${GIT_BRANCH}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
+
+            def repoUrl = env.GIT_URL
+            def repoName = repoUrl.split('/')
+
+            def branchUrl = env.GIT_BRANCH
+            def branchName= branchUrl.split('/')                                
+
+            sh "mvn sonar:sonar -Dsonar.projectName='${repoName[4]}'-'${branchName[2]}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
         }
     }
 }

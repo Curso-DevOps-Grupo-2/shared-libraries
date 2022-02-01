@@ -3,7 +3,7 @@ import utilities.*
 def call(stages){
     def stagesList = stages.split(';')
     def listStagesOrder = [
-        // 'gitDiff': 'gitDiff',
+        'gitDiff': 'gitDiff',
         'nexusDownload': 'nexusDownload',
         'runJar': 'runJar'
     ]
@@ -25,32 +25,80 @@ def call(stages){
 
 }
 def allStages(){
+    prueba()
+    gitDiff()
     nexusDownload()
     runJar()
 }
-// def gitDiff(){
-//     env.STAGE = "Stage 1: git diff"
-//     stage("$env.STAGE"){
-//         sh "echo 'git diff'"
-//         sh "git diff '${GIT_BRANCH}'...main"
-//     }
-// }
+def prueba(){
+    env.STAGE = "prueba"
+    stage("$env.STAGE"){
+
+        //*********** Aumentar Version por variable type_version*************************************
+        def type_version  ='minor'
+
+        def version = sh (
+            script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+        ).trim()
+
+        def latestVersion = version
+        def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
+        def nextVersion
+        switch (type_version) {
+            case 'major':
+                nextVersion = "${major + 1}.0.0"
+                break
+            case 'minor':
+                nextVersion = "${major}.${minor + 1}.0"
+                break
+            case 'patch':
+                nextVersion = "${major}.${minor}.${patch + 1}"
+                break
+        }
+        echo "The nextVersion is: ${nextVersion}"    
+
+
+        //************ Vsalidar si existe archivos para ejecucion Gradle*************************************
+
+        def exists_maven = fileExists 'pom.xml' 
+        
+        if (exists_maven) { echo 'App Maven' } else { echo 'No es una App Maven' }
+        
+        
+
+        
+    }
+}
+
+def gitDiff(){
+    env.STAGE = "Stage 1: git diff"
+    stage("$env.STAGE"){
+        sh "echo 'git diff'"
+        sh "git diff origin/main...'${GIT_BRANCH}'"
+    }
+}
 def nexusDownload(){
     env.STAGE = "Stage 2: nexus download"
     stage("$env.STAGE"){
         sh "echo 'download from nexus'"
-        sh "export PVERSION=`mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'`"
-        sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD 'http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/{$PVERSION}/DevOpsUsach2020-{$PVERSION}.jar' -O"
+        def version = sh (
+            script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+        ).trim()
+        def URL = "http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/$version/DevOpsUsach2020-${version}.jar"
+        sh "curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD '$URL' -O"
     }
 }
 def runJar(){
     env.STAGE = "Stage 3: run project"
     stage("$env.STAGE"){
-        steps {
-            sh "java -jar DevOpsUsach2020-'{$PVERSION}'.jar &"
-            sh "sleep 20"
-            sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
-        }
+        
+        def version = sh (
+            script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+        ).trim()
+        sh "echo '${version}'"
+        sh "java -jar DevOpsUsach2020-${version}.jar &"
+        sh "sleep 20"
+        sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
     }
 }
 // def mergeMaster(){
