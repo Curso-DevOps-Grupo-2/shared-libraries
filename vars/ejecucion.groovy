@@ -14,11 +14,11 @@ def call(){
                 steps {
                     script{                        
                         sh "env"
-                        if (env.GIT_BRANCH.startsWith("feature")) {
+                        if (env.GIT_BRANCH.contains("feature")) {
                             figlet  "C. INTEGRATION"
                             // ci_pipeline.call(params.stages)
                         }
-                        if (env.GIT_BRANCH.startsWith("release")) {
+                        if (env.GIT_BRANCH.contains("release")) {
                             figlet  "C. DELIVERY"
                             // cd_pipeline.call(params.stages)
                         }
