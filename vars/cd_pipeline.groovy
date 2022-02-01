@@ -67,7 +67,7 @@ def prueba(){
 
         def exists_gradlew = fileExists 'gradlew' 
         
-        if (exists) { echo 'Yes' } else { echo 'No' }
+        if (exists_gradlew) { echo 'Yes' } else { echo 'No' }
         
         
 
