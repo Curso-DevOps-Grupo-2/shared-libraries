@@ -25,10 +25,10 @@ def call(stages){
 
 }
 def allStages(){
-     prueba()
-    // gitDiff()
-    // nexusDownload()
-    // runJar()
+    prueba()
+    gitDiff()
+    nexusDownload()
+    runJar()
 }
 def prueba(){
     env.STAGE = "prueba"
@@ -96,7 +96,7 @@ def runJar(){
             script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
         ).trim()
         sh "echo '${version}'"
-        sh "java -jar DevOpsUsach2020-${version}.jar &"                      
+        sh "java -jar DevOpsUsach2020-${version}.jar &"
         sh "sleep 20"
         sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
     }
