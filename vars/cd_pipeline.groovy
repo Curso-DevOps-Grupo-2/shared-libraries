@@ -25,15 +25,56 @@ def call(stages){
 
 }
 def allStages(){
+    prueba()
     gitDiff()
     nexusDownload()
     runJar()
 }
+def prueba(){
+    env.STAGE = "prueba"
+    stage("$env.STAGE"){
+
+        //*********** Aumentar Version por variable type_version*************************************
+        def type_version  ='minor'
+
+        def version = sh (
+            script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+        ).trim()
+
+        def latestVersion = version
+        def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
+        def nextVersion
+        switch (type_version) {
+            case 'major':
+                nextVersion = "${major + 1}.0.0"
+                break
+            case 'minor':
+                nextVersion = "${major}.${minor + 1}.0"
+                break
+            case 'patch':
+                nextVersion = "${major}.${minor}.${patch + 1}"
+                break
+        }
+        echo "The nextVersion is: ${nextVersion}"    
+
+
+        //************ Vsalidar si existe archivos para ejecucion Gradle*************************************
+
+        def exists_gradlew = fileExists 'gradlew' 
+        
+        if (exists_gradlew) { echo 'Yes' } else { echo 'No' }
+        
+        
+
+        
+    }
+}
+
 def gitDiff(){
     env.STAGE = "Stage 1: git diff"
     stage("$env.STAGE"){
         sh "echo 'git diff'"
-        sh "git diff '${GIT_BRANCH}'...origin/main"
+        sh "git diff origin/main...'${GIT_BRANCH}'"
     }
 }
 def nexusDownload(){
