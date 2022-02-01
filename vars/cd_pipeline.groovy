@@ -34,15 +34,8 @@ def prueba(){
     env.STAGE = "prueba"
     stage("$env.STAGE"){
 
-        sh "echo '${GIT_BRANCH}'"
-        sh "echo '${GIT_URL}'"
-
-
-        def repoUrl = env.GIT_BRANCH
-        def key = repoUrl.split('/')
-                
-        echo "The projectKey is: ${key}"        
-        def scope  ='minor'
+        //*********** Aumentar Version por variable type_version*************************************
+        def type_version  ='minor'
 
         def version = sh (
             script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
@@ -51,7 +44,7 @@ def prueba(){
         def latestVersion = version
         def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
         def nextVersion
-        switch (scope) {
+        switch (type_version) {
             case 'major':
                 nextVersion = "${major + 1}.0.0"
                 break
@@ -64,6 +57,8 @@ def prueba(){
         }
         echo "The nextVersion is: ${nextVersion}"    
 
+
+        //************ Vsalidar si existe archivos para ejecucion Gradle*************************************
 
         def exists_gradlew = fileExists 'gradlew' 
         
