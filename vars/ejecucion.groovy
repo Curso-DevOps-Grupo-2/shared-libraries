@@ -16,11 +16,11 @@ def call(){
                         sh "env"
                         if (env.GIT_BRANCH.contains("feature")) {
                             figlet  "C. INTEGRATION"
-                            // ci_pipeline.call(params.stages)
+                            ci_pipeline.call(params.stages)
                         }
                         if (env.GIT_BRANCH.contains("release")) {
                             figlet  "C. DELIVERY"
-                            // cd_pipeline.call(params.stages)
+                            cd_pipeline.call(params.stages)
                         }
                     }
                 }
