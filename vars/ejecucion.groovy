@@ -17,7 +17,7 @@ def call(){
                         sh "env"
 
                         def versionUtils = new version.versionUtils();
-                        def latestVerision, nextVersion = versionUtils.checkVersion('minor')
+                        def (latestVerision, nextVersion) = versionUtils.checkVersion('minor')
                         if (env.GIT_BRANCH.contains("feature") || env.GIT_BRANCH.contains("develop")) {
                             figlet  "C. INTEGRATION"
                             ci_pipeline.call(params.stages, latestVersion, nextVersion)
