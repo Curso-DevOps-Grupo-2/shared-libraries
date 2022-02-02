@@ -1,6 +1,6 @@
 import utilities.*
 
-def call(stages, version){
+def call(stages, latestVersion, nextVersion){
     def stagesList = stages.split(';')
     def listStagesOrder = [
         'compile': 'compile',
@@ -17,13 +17,13 @@ def call(stages, version){
 
     if (stagesArray.isEmpty()) {
         echo 'El pipeline se ejecutará completo'
-        allStages(version)
+        allStages(nextVersion)
     } else {
         echo 'Stages a ejecutar :' + stages
         stagesArray.each{ stageFunction ->//variable as param
             echo 'Ejecutando ' + stageFunction
             if (stageFunction.matches("nexusUpload") || stageFunction.matches("gitCreateRelease")) {
-                "${stageFunction}"(version)
+                "${stageFunction}"(nextVersion)
             }
             else {
                 "${stageFunction}"()
@@ -39,7 +39,7 @@ def allStages(version){
     sonar()
     nexusUpload(version)
     if (env.GIT_BRANCH.contains("develop")) {
-        gitCreateRelease()
+        gitCreateRelease(version)
     }
 }
 def compile(){
@@ -82,7 +82,7 @@ def nexusUpload(version){
                     [
                         classifier: '',
                         extension: '',
-                        filePath: 'build/DevOpsUsach2020-0.0.1.jar'
+                        filePath: "build/DevOpsUsach2020-${version}.jar"
                     ]
                 ],
                 mavenCoordinate: [
