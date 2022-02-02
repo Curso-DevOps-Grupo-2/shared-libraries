@@ -37,7 +37,7 @@ def allStages(version){
     test()
     packageJar()
     sonar()
-    nexusUpload(version)
+    nexusUpload()
     if (env.GIT_BRANCH.contains("develop")) {
         gitCreateRelease(version)
     }
