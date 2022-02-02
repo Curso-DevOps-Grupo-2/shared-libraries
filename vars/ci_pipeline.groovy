@@ -100,7 +100,7 @@ def nexusUpload(){
 }
 def gitCreateRelease(version) {
     sh "git checkout -b release-v${version}"
-    sh "git push origin/release-v${version}"
+    sh "git push origin release-v${version}"
 }
 
 return this;
