@@ -22,6 +22,6 @@ def checkVersion(type_version){
     }
     echo "The nextVersion is: ${nextVersion}"
 
-    return [latestVersion, nextVersion]
+    return nextVersion
 }
 return this;

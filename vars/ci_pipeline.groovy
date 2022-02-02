@@ -1,6 +1,6 @@
 import utilities.*
 
-def call(stages, latestVersion, nextVersion){
+def call(stages, nextVersion){
     def stagesList = stages.split(';')
     def listStagesOrder = [
         'compile': 'compile',
