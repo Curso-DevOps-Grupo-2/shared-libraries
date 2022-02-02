@@ -85,14 +85,14 @@ def nexusUpload(){
                     [
                         classifier: '',
                         extension: '',
-                        filePath: "build/DevOpsUsach2020-${version}.jar"
+                        filePath: "build/DevOpsUsach2020-'${version}'.jar"
                     ]
                 ],
                 mavenCoordinate: [
                     artifactId: 'DevOpsUsach2020',
                     groupId: 'com.devopsusach2020',
                     packaging: 'jar',
-                    version: "${version}"
+                    version: "'${version}'"
                 ]
             ]
         ]
