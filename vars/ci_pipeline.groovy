@@ -22,7 +22,7 @@ def call(stages, nextVersion){
         echo 'Stages a ejecutar :' + stages
         stagesArray.each{ stageFunction ->//variable as param
             echo 'Ejecutando ' + stageFunction
-            if (stageFunction.matches("nexusUpload") || stageFunction.matches("gitCreateRelease")) {
+            if (stageFunction.matches("gitCreateRelease")) {
                 "${stageFunction}"(nextVersion)
             }
             else {
@@ -71,8 +71,11 @@ def sonar(){
         }
     }
 }
-def nexusUpload(version){
+def nexusUpload(){
     env.STAGE = "Stage 5: Nexus Upload"
+    def version = sh (
+        script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
+    ).trim()
     stage("$env.STAGE "){
         nexusPublisher nexusInstanceId: 'nexus',
         nexusRepositoryId: 'devops-usach-nexus',
@@ -89,7 +92,7 @@ def nexusUpload(version){
                     artifactId: 'DevOpsUsach2020',
                     groupId: 'com.devopsusach2020',
                     packaging: 'jar',
-                    version: '0.0.1'
+                    version: "${version}"
                 ]
             ]
         ]
