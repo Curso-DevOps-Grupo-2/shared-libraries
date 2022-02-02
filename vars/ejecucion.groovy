@@ -1,5 +1,5 @@
+
 def call(){
-  
  pipeline {
     agent any
     environment {
@@ -14,9 +14,12 @@ def call(){
                 steps {
                     script{                        
                         sh "env"
-                        if (env.GIT_BRANCH.contains("feature")) {
+
+                        def versionUtils = new version.versionUtils();
+                        def version = versionUtils.checkVersion('minor')
+                        if (env.GIT_BRANCH.contains("feature") || env.GIT_BRANCH.contains("develop")) {
                             figlet  "C. INTEGRATION"
-                            ci_pipeline.call(params.stages)
+                            ci_pipeline.call(params.stages, version)
                         }
                         if (env.GIT_BRANCH.contains("release")) {
                             figlet  "C. DELIVERY"

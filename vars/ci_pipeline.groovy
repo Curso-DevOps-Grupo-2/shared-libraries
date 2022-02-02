@@ -1,6 +1,6 @@
 import utilities.*
 
-def call(stages){
+def call(stages, version){
     def stagesList = stages.split(';')
     def listStagesOrder = [
         'compile': 'compile',
@@ -8,6 +8,7 @@ def call(stages){
         'packageJar': 'packageJar',
         'sonar': 'sonar',
         'nexusUpload': 'nexusUpload',
+        'gitCreateRelease': 'gitCreateRelease'
     ]
 
     def arrayUtils = new array.arrayExtentions();
@@ -16,22 +17,30 @@ def call(stages){
 
     if (stagesArray.isEmpty()) {
         echo 'El pipeline se ejecutará completo'
-        allStages()
+        allStages(version)
     } else {
         echo 'Stages a ejecutar :' + stages
         stagesArray.each{ stageFunction ->//variable as param
             echo 'Ejecutando ' + stageFunction
-            "${stageFunction}"()
+            if (stageFunction.matches("nexusUpload") || stageFunction.matches("gitCreateRelease")) {
+                "${stageFunction}"(version)
+            }
+            else {
+                "${stageFunction}"()
+            }
         }
     }
 
 }
-def allStages(){
+def allStages(version){
     compile()
     test()
     packageJar()
     sonar()
-    nexusUpload()
+    nexusUpload(version)
+    if (env.GIT_BRANCH.contains("develop")) {
+        gitCreateRelease()
+    }
 }
 def compile(){
     env.STAGE = "Stage 1: Compile"
@@ -58,18 +67,11 @@ def sonar(){
     stage("$env.STAGE "){
         withSonarQubeEnv('sonarqube') {
             sh "echo 'Calling sonar'"
-
-            def repoUrl = env.GIT_URL
-            def repoName = repoUrl.split('/')
-
-            def branchUrl = env.GIT_BRANCH
-            def branchName= branchUrl.split('/')                                
-
-            sh "mvn sonar:sonar -Dsonar.projectName='${repoName[4]}'-'${branchName[2]}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
+            sh "mvn sonar:sonar -Dsonar.projectName=ms-iclab-'${GIT_BRANCH}'-'${BUILD_DISPLAY_NAME}' -Dsonar.projectKey=test"
         }
     }
 }
-def nexusUpload(){
+def nexusUpload(version){
     env.STAGE = "Stage 5: Nexus Upload"
     stage("$env.STAGE "){
         nexusPublisher nexusInstanceId: 'nexus',
@@ -92,6 +94,10 @@ def nexusUpload(){
             ]
         ]
     }
+}
+def gitCreateRelease(version) {
+    sh "git checkout -b release-v${version}"
+    sh "git push origin/release-v${version}"
 }
 
 return this;
