@@ -6,6 +6,7 @@ def call(stages, nextVersion, currentVersion){
         'gitDiff': 'gitDiff',
         'nexusDownload': 'nexusDownload',
         'runJar': 'runJar',
+        'updatePom': 'updatePom',
         'mergeMaster': 'mergeMaster',
         'mergeDevelop': 'mergeDevelop',
         'tagMaster': 'tagMaster'
@@ -39,6 +40,7 @@ def allStages(currentVersion, nextVersion){
     gitDiff()
     nexusDownload(currentVersion)
     runJar(currentVersion)
+    updatePom(nextVersion)
     mergeMaster(nextVersion)
     mergeDevelop(nextVersion)
     tagMaster(nextVersion)
@@ -67,6 +69,13 @@ def runJar(version){
         sh "sleep 20"
         sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
         sh "rm DevOpsUsach2020-${version}.jar"
+    }
+}
+def updatePom(version) {
+    env.STAGE = ""
+    stage("$env.STAGE"){
+        sh "mvn versions:set -DnewVersion=${version}"
+        sh "git add pom.xml && git commit -m 'update version to ${version}'"
     }
 }
 def mergeMaster(version){
