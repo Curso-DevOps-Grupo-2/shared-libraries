@@ -1,12 +1,15 @@
 package utilities.version
 
-def checkVersion(type_version){
-    //*********** Aumentar Version por variable type_version*************************************
+def getCurrentVersion() {
     def version = sh (
         script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
     ).trim()
+    return version
+}
 
-    def latestVersion = version
+def getNextVersion(type_version){
+    //*********** Aumentar Version por variable type_version*************************************
+    def latestVersion = getCurrentVersion()
     def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
     def nextVersion
     switch (type_version) {
