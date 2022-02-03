@@ -82,14 +82,12 @@ def mergeMaster(version){
     stage("$env.STAGE"){
         sh "git checkout main"
         sh "git merge release-v${version}"
-        sh "git commit -am 'merge branch release-v${version}'"
         sh "git push"
     }
 }
 def tagMaster(version){
     env.STAGE = "Stage 7: tag master"
     stage("$env.STAGE") {
-        sh "git checkout main"
         sh "git tag -a ${version} -m 'Jenkins CD version: ${version}'"
         sh "git push"
     }
