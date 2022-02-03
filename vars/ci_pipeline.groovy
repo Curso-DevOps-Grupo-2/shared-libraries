@@ -17,7 +17,7 @@ def call(stages, nextVersion, currentVersion){
 
     if (stagesArray.isEmpty()) {
         echo 'El pipeline se ejecutará completo'
-        allStages(nextVersion)
+        allStages(nextVersion, currentVersion)
     } else {
         echo 'Stages a ejecutar :' + stages
         stagesArray.each{ stageFunction ->//variable as param
@@ -35,14 +35,14 @@ def call(stages, nextVersion, currentVersion){
     }
 
 }
-def allStages(version){
+def allStages(nextVersion, currentVersion){
     compile()
     test()
     packageJar()
     sonar()
-    nexusUpload()
+    nexusUpload(currentVersion)
     if (env.GIT_BRANCH.contains("develop")) {
-        gitCreateRelease(version)
+        gitCreateRelease(nextVersion)
     }
 }
 def compile(){
