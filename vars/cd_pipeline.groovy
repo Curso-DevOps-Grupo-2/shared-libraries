@@ -8,7 +8,6 @@ def call(stages, nextVersion, currentVersion){
         'runJar': 'runJar',
         'updatePom': 'updatePom',
         'mergeMaster': 'mergeMaster',
-        'mergeDevelop': 'mergeDevelop',
         'tagMaster': 'tagMaster'
     ]
 
@@ -42,7 +41,6 @@ def allStages(currentVersion, nextVersion){
     runJar(currentVersion)
     updatePom(nextVersion)
     mergeMaster(nextVersion)
-    mergeDevelop(nextVersion)
     tagMaster(nextVersion)
 }
 
@@ -72,7 +70,7 @@ def runJar(version){
     }
 }
 def updatePom(version) {
-    env.STAGE = "Stage 4: update pam"
+    env.STAGE = "Stage 4: update pom"
     stage("$env.STAGE"){
         sh "git checkout release-v${version}"
         sh "mvn versions:set -DnewVersion=${version}"
@@ -83,15 +81,6 @@ def mergeMaster(version){
     env.STAGE = "Stage 5: merge master"
     stage("$env.STAGE"){
         sh "git checkout main"
-        sh "git merge release-v${version}"
-        sh "git commit -am 'merge branch release-v${version}'"
-        sh "git push"
-    }
-}
-def mergeDevelop(version){
-    env.STAGE = "Stage 6: merge develop"
-    stage("$env.STAGE"){
-        sh "git checkout develop"
         sh "git merge release-v${version}"
         sh "git commit -am 'merge branch release-v${version}'"
         sh "git push"
