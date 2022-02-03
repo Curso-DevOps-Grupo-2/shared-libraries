@@ -89,7 +89,7 @@ def tagMaster(version){
     env.STAGE = "Stage 7: tag master"
     stage("$env.STAGE") {
         sh "git tag -a ${version} -m 'Jenkins CD version: ${version}'"
-        sh "git push"
+        sh "git push origin ${version}"
     }
 }
 
