@@ -22,10 +22,14 @@ def call(){
                             figlet  "C. INTEGRATION"
                             ci_pipeline.call(params.stages, nextVersion)
                         }
-                        if (env.GIT_BRANCH.contains("release")) {
+                        else if (env.GIT_BRANCH.contains("release")) {
                             figlet  "C. DELIVERY"
                             cd_pipeline.call(params.stages)
                         }
+                        else{
+                            sh "echo 'Rama no identificada para ejecutar un pipeline.'"
+                        }
+                        
                     }
                 }
             }
