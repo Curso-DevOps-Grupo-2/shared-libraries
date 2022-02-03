@@ -17,7 +17,7 @@ def call(stages, nextVersion, currentVersion){
 
     if (stagesArray.isEmpty()) {
         echo 'El pipeline CD se ejecutará completo'
-        allStages()
+        allStages(currentVersion, nextVersion)
     } else {
         echo 'Stages a ejecutar :' + stages
         stagesArray.each{ stageFunction ->//variable as param
@@ -35,11 +35,13 @@ def call(stages, nextVersion, currentVersion){
     }
 
 }
-def allStages(){
-    prueba()
+def allStages(currentVersion, nextVersion){
     gitDiff()
-    nexusDownload()
-    runJar()
+    nexusDownload(currentVersion)
+    runJar(currentVersion)
+    mergeMaster(nextVersion)
+    mergeDevelop(nextVersion)
+    tagMaster(nextVersion)
 }
 
 def gitDiff(){
