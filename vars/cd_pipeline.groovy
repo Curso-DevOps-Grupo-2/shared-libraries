@@ -74,6 +74,7 @@ def runJar(version){
 def updatePom(version) {
     env.STAGE = "Stage 4: update pam"
     stage("$env.STAGE"){
+        sh "git checkout release-v${version}"
         sh "mvn versions:set -DnewVersion=${version}"
         sh "git add pom.xml && git commit -m 'update version to ${version}'"
     }
