@@ -1,6 +1,6 @@
 import utilities.*
 
-def call(stages, nextVersion){
+def call(stages, nextVersion, currentVersion){
     def stagesList = stages.split(';')
     def listStagesOrder = [
         'compile': 'compile',
@@ -24,6 +24,9 @@ def call(stages, nextVersion){
             echo 'Ejecutando ' + stageFunction
             if (stageFunction.matches("gitCreateRelease")) {
                 "${stageFunction}"(nextVersion)
+            }
+            else if (stageFunction.matches("nexusUpload")){
+                "${stageFunction}"(currentVersion)
             }
             else {
                 "${stageFunction}"()
@@ -71,11 +74,8 @@ def sonar(){
         }
     }
 }
-def nexusUpload(){
+def nexusUpload(version){
     env.STAGE = "Stage 5: Nexus Upload"
-    def version = sh (
-        script: "mvn help:evaluate -Dexpression=project.version | grep -e '^[^[]'", returnStdout: true
-    ).trim()
     stage("$env.STAGE "){
         nexusPublisher nexusInstanceId: 'nexus',
         nexusRepositoryId: 'devops-usach-nexus',
