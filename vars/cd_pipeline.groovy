@@ -72,14 +72,14 @@ def runJar(version){
     }
 }
 def updatePom(version) {
-    env.STAGE = ""
+    env.STAGE = "Stage 4: update pam"
     stage("$env.STAGE"){
         sh "mvn versions:set -DnewVersion=${version}"
         sh "git add pom.xml && git commit -m 'update version to ${version}'"
     }
 }
 def mergeMaster(version){
-    env.STAGE = "Stage 4: merge master"
+    env.STAGE = "Stage 5: merge master"
     stage("$env.STAGE"){
         sh "git checkout main"
         sh "git merge release-v${version}"
@@ -88,7 +88,7 @@ def mergeMaster(version){
     }
 }
 def mergeDevelop(version){
-    env.STAGE = "Stage 5: merge develop"
+    env.STAGE = "Stage 6: merge develop"
     stage("$env.STAGE"){
         sh "git checkout develop"
         sh "git merge release-v${version}"
@@ -97,7 +97,7 @@ def mergeDevelop(version){
     }
 }
 def tagMaster(version){
-    env.STAGE = "Stage 6: tag master"
+    env.STAGE = "Stage 7: tag master"
     stage("$env.STAGE") {
         sh "git checkout main"
         sh "git tag -a ${version} -m 'Jenkins CD version: ${version}'"
