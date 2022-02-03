@@ -17,14 +17,15 @@ def call(){
                         sh "env"
 
                         def versionUtils = new version.versionUtils();
-                        def nextVersion = versionUtils.checkVersion('minor')
+                        def nextVersion = versionUtils.getNextVersion('minor')
+                        def currentVersion = versionUtils.getCurrentVersion()
                         if (env.GIT_BRANCH.contains("feature") || env.GIT_BRANCH.contains("develop")) {
                             figlet  "C. INTEGRATION"
-                            ci_pipeline.call(params.stages, nextVersion)
+                            ci_pipeline.call(params.stages, nextVersion, currentVersion)
                         }
                         else if (env.GIT_BRANCH.contains("release")) {
                             figlet  "C. DELIVERY"
-                            cd_pipeline.call(params.stages)
+                            cd_pipeline.call(params.stages, nextVersion, currentVersion)
                         }
                         else{
                             sh "echo 'Rama no identificada para ejecutar un pipeline.'"
