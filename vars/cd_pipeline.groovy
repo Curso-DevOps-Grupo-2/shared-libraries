@@ -66,6 +66,7 @@ def runJar(version){
         sh "java -jar DevOpsUsach2020-${version}.jar &"
         sh "sleep 20"
         sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+        sh "rm DevOpsUsach2020-${version}.jar"
     }
 }
 def mergeMaster(version){
