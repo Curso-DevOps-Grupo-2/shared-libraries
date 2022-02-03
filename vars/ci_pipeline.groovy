@@ -100,8 +100,6 @@ def nexusUpload(version){
 }
 def gitCreateRelease(version) {
     sh "git checkout -b release-v${version}"
-    sh "mvn versions:set -DnewVersion=${version}"
-    sh "git add pom.xml && git commit -m 'update version to ${version}'"
     sh "git push origin release-v${version}"
 }
 
