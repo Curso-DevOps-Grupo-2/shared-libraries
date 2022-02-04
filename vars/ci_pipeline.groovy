@@ -99,8 +99,11 @@ def nexusUpload(version){
     }
 }
 def gitCreateRelease(version) {
-    sh "git checkout -b release-v${version}"
-    sh "git push origin release-v${version}"
+    env.STAGE = "Stage 6: Git create release"
+    stage("$env.STAGE"){
+        sh "git checkout -b release-v${version}"
+        sh "git push origin release-v${version}"
+    }
 }
 
 return this;
